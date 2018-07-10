@@ -4,10 +4,12 @@ set -e
 set -x
 
 if [ -n "$SKIP_TESTS" ]; then
-	exit $?
+	exit 0
 fi
 
 TMPDIR=${TMPDIR:-/tmp}
+
+exit 8
 
 # Configure the test environment; run them early so that we're certain
 # that they're started by the time we need them.
