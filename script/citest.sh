@@ -1,7 +1,6 @@
 #!/bin/sh
 
 set -e
-set -x
 
 if [ -n "$SKIP_TESTS" ]; then
 	exit 0
