@@ -9,8 +9,6 @@ fi
 
 TMPDIR=${TMPDIR:-/tmp}
 
-exit 8
-
 # Configure the test environment; run them early so that we're certain
 # that they're started by the time we need them.
 
@@ -137,6 +135,8 @@ if [ -z "$SKIP_SSH_TESTS" ]; then
 	unset GITTEST_REMOTE_SSH_PASSPHRASE
 	unset GITTEST_REMOTE_SSH_FINGERPRINT
 fi
+
+exit 8
 
 echo "Cleaning up..."
 
