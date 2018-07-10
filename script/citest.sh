@@ -19,7 +19,10 @@ cleanup() {
 	fi
 }
 
-die() { cleanup && exit $1 }
+die() {
+	cleanup
+	exit $1
+}
 
 TMPDIR=${TMPDIR:-/tmp}
 
