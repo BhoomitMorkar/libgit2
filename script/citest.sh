@@ -76,7 +76,7 @@ if [ -z "$SKIP_OFFLINE_TESTS" ]; then
 	echo "## Running (offline) tests"
 	echo "################################################################################"
 
-	ctest -V -R offline || exit $?
+#	ctest -V -R offline || exit $?
 fi
 
 if [ -z "$SKIP_ONLINE_TESTS" ]; then
@@ -98,7 +98,7 @@ if [ -z "$SKIP_GITDAEMON_TESTS" ]; then
 	echo ""
 
 	export GITTEST_REMOTE_URL="git://localhost/test.git"
-	ctest -V -R gitdaemon || exit $?
+	ctest --debug -VV -R gitdaemon || exit $?
 	unset GITTEST_REMOTE_URL
 fi
 
@@ -110,7 +110,7 @@ if [ -z "$SKIP_PROXY_TESTS" ]; then
 	export GITTEST_REMOTE_PROXY_URL="localhost:8080"
 	export GITTEST_REMOTE_PROXY_USER="foo"
 	export GITTEST_REMOTE_PROXY_PASS="bar"
-	ctest -V -R proxy || exit $?
+	ctest --debug -VV -R proxy || exit $?
 	unset GITTEST_REMOTE_PROXY_URL
 	unset GITTEST_REMOTE_PROXY_USER
 	unset GITTEST_REMOTE_PROXY_PASS
@@ -127,7 +127,7 @@ if [ -z "$SKIP_SSH_TESTS" ]; then
 	export GITTEST_REMOTE_SSH_PUBKEY="${SSH_DIR}/id_rsa.pub"
 	export GITTEST_REMOTE_SSH_PASSPHRASE=""
 	export GITTEST_REMOTE_SSH_FINGERPRINT="${SSH_FINGERPRINT}"
-	ctest -V -R ssh || exit $?
+	ctest --debug -VV -R ssh || exit $?
 	unset GITTEST_REMOTE_URL
 	unset GITTEST_REMOTE_USER
 	unset GITTEST_REMOTE_SSH_KEY
