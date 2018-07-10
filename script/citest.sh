@@ -7,6 +7,20 @@ if [ -n "$SKIP_TESTS" ]; then
 	exit 0
 fi
 
+cleanup() {
+	echo "Cleaning up..."
+
+	if [ ! -z "$GITDAEMON_DIR" -a -f "${GITDAEMON_DIR}/pid" ]; then
+		kill $(cat "${GITDAEMON_DIR}/pid")
+	fi
+
+	if [ ! -z "$SSHD_DIR" -a -f "${SSHD_DIR}/pid" ]; then
+		kill $(cat "${SSHD_DIR}/pid")
+	fi
+}
+
+die() { cleanup && exit $1 }
+
 TMPDIR=${TMPDIR:-/tmp}
 
 # Configure the test environment; run them early so that we're certain
@@ -76,7 +90,7 @@ if [ -z "$SKIP_OFFLINE_TESTS" ]; then
 	echo "## Running (offline) tests"
 	echo "################################################################################"
 
-#	ctest -V -R offline || exit $?
+#	ctest -V -R offline || die $?
 fi
 
 if [ -z "$SKIP_ONLINE_TESTS" ]; then
@@ -98,7 +112,7 @@ if [ -z "$SKIP_GITDAEMON_TESTS" ]; then
 	echo ""
 
 	export GITTEST_REMOTE_URL="git://localhost/test.git"
-	ctest --debug -VV -R gitdaemon || exit $?
+	ctest --debug -VV -R gitdaemon || die $?
 	unset GITTEST_REMOTE_URL
 fi
 
@@ -110,7 +124,7 @@ if [ -z "$SKIP_PROXY_TESTS" ]; then
 	export GITTEST_REMOTE_PROXY_URL="localhost:8080"
 	export GITTEST_REMOTE_PROXY_USER="foo"
 	export GITTEST_REMOTE_PROXY_PASS="bar"
-	ctest --debug -VV -R proxy || exit $?
+	ctest --debug -VV -R proxy || die $?
 	unset GITTEST_REMOTE_PROXY_URL
 	unset GITTEST_REMOTE_PROXY_USER
 	unset GITTEST_REMOTE_PROXY_PASS
@@ -127,7 +141,7 @@ if [ -z "$SKIP_SSH_TESTS" ]; then
 	export GITTEST_REMOTE_SSH_PUBKEY="${SSH_DIR}/id_rsa.pub"
 	export GITTEST_REMOTE_SSH_PASSPHRASE=""
 	export GITTEST_REMOTE_SSH_FINGERPRINT="${SSH_FINGERPRINT}"
-	ctest --debug -VV -R ssh || exit $?
+	ctest --debug -VV -R ssh || die $?
 	unset GITTEST_REMOTE_URL
 	unset GITTEST_REMOTE_USER
 	unset GITTEST_REMOTE_SSH_KEY
@@ -136,14 +150,4 @@ if [ -z "$SKIP_SSH_TESTS" ]; then
 	unset GITTEST_REMOTE_SSH_FINGERPRINT
 fi
 
-exit 8
-
-echo "Cleaning up..."
-
-if [ -z "$SKIP_GITDAEMON_TESTS" ]; then
-	kill $(cat "${GITDAEMON_DIR}/pid")
-fi
-
-if [ -z "$SKIP_SSH_TESTS" ]; then
-	kill $(cat "${SSHD_DIR}/pid")
-fi
+cleanup
