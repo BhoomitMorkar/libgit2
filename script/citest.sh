@@ -114,7 +114,7 @@ if [ -z "$SKIP_GITDAEMON_TESTS" ]; then
 	echo ""
 
 	export GITTEST_REMOTE_URL="git://localhost/test.git"
-	ctest --debug -VV -R gitdaemon || die $?
+	ctest -V -R gitdaemon || die $?
 	unset GITTEST_REMOTE_URL
 fi
 
@@ -126,7 +126,7 @@ if [ -z "$SKIP_PROXY_TESTS" ]; then
 	export GITTEST_REMOTE_PROXY_URL="localhost:8080"
 	export GITTEST_REMOTE_PROXY_USER="foo"
 	export GITTEST_REMOTE_PROXY_PASS="bar"
-	ctest --debug -VV -R proxy || die $?
+	ctest -V -R proxy || die $?
 	unset GITTEST_REMOTE_PROXY_URL
 	unset GITTEST_REMOTE_PROXY_USER
 	unset GITTEST_REMOTE_PROXY_PASS
@@ -143,7 +143,7 @@ if [ -z "$SKIP_SSH_TESTS" ]; then
 	export GITTEST_REMOTE_SSH_PUBKEY="${SSH_DIR}/id_rsa.pub"
 	export GITTEST_REMOTE_SSH_PASSPHRASE=""
 	export GITTEST_REMOTE_SSH_FINGERPRINT="${SSH_FINGERPRINT}"
-	ctest --debug -VV -R ssh || die $?
+	ctest -V -R ssh || die $?
 	unset GITTEST_REMOTE_URL
 	unset GITTEST_REMOTE_USER
 	unset GITTEST_REMOTE_SSH_KEY
