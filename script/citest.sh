@@ -49,12 +49,15 @@ if [ -z "$SKIP_SSH_TESTS" ]; then
 	echo "Starting ssh daemon..."
 	HOME=`mktemp -d ${TMPDIR}/home.XXXXXXXX`
 	SSHD_DIR=`mktemp -d ${TMPDIR}/sshd.XXXXXXXX`
+	git init --bare "${SSHD_DIR}/test.git"
 	cat >"${SSHD_DIR}/sshd_config" <<-EOF
 	Port 2222
 	ListenAddress 0.0.0.0
 	Protocol 2
 	HostKey ${SSHD_DIR}/id_rsa
 	PidFile ${SSHD_DIR}/pid
+	AuthorizedKeysFile ${HOME}/.ssh/authorized_keys
+	LogLevel DEBUG
 	RSAAuthentication yes
 	PasswordAuthentication yes
 	PubkeyAuthentication yes
@@ -63,7 +66,7 @@ if [ -z "$SKIP_SSH_TESTS" ]; then
 	UsePAM no
 	EOF
 	ssh-keygen -t rsa -f "${SSHD_DIR}/id_rsa" -N "" -q
-	/usr/sbin/sshd -f "${SSHD_DIR}/sshd_config"
+	/usr/sbin/sshd -f "${SSHD_DIR}/sshd_config" -E "${SSHD_DIR}/log"
 
 	# Set up keys
 	mkdir "${HOME}/.ssh"
@@ -76,11 +79,8 @@ if [ -z "$SKIP_SSH_TESTS" ]; then
 	# Get the fingerprint for localhost and remove the colons so we can
 	# parse it as a hex number. The Mac version is newer so it has a
 	# different output format.
-	if [ "$TRAVIS_OS_NAME" = "osx" ]; then
-		SSH_FINGERPRINT=$(ssh-keygen -E md5 -F '[localhost]:2222' -f "${HOME}/.ssh/known_hosts" -l | tail -n 1 | cut -d ' ' -f 3 | cut -d : -f2- | tr -d :)
-	else
-		SSH_FINGERPRINT=$(ssh-keygen -F '[localhost]:2222' -f "${HOME}/.ssh/known_hosts" -l | tail -n 1 | cut -d ' ' -f 2 | tr -d ':')
-	fi
+	SSH_FINGERPRINT=$(ssh-keygen -E md5 -F '[localhost]:2222' -f "${HOME}/.ssh/known_hosts" -l | tail -n 1 | cut -d ' ' -f 3 | cut -d : -f2- | tr -d :)
+	# SSH_FINGERPRINT=$(ssh-keygen -F '[localhost]:2222' -f "${HOME}/.ssh/known_hosts" -l | tail -n 1 | cut -d ' ' -f 2 | tr -d ':')
 fi
 
 # Run the tests that do not require network connectivity.
@@ -136,7 +136,7 @@ if [ -z "$SKIP_SSH_TESTS" ]; then
 	echo "Running ssh tests"
 	echo ""
 
-	export GITTEST_REMOTE_URL="ssh://localhost:2222/$HOME/_temp/test.git"
+	export GITTEST_REMOTE_URL="ssh://localhost:2222/$SSHD_DIR/test.git"
 	export GITTEST_REMOTE_USER=$USER
 	export GITTEST_REMOTE_SSH_KEY="${HOME}/.ssh/id_rsa"
 	export GITTEST_REMOTE_SSH_PUBKEY="${HOME}/.ssh/id_rsa.pub"
