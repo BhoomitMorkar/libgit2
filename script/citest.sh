@@ -24,6 +24,7 @@ die() {
 }
 
 TMPDIR=${TMPDIR:-/tmp}
+USER=${USER:-$(whoami)}
 
 # Configure the test environment; run them early so that we're certain
 # that they're started by the time we need them.
@@ -62,6 +63,7 @@ if [ -z "$SKIP_SSH_TESTS" ]; then
 	PasswordAuthentication yes
 	PubkeyAuthentication yes
 	ChallengeResponseAuthentication no
+	StrictModes no
 	# Required here as sshd will simply close connection otherwise
 	UsePAM no
 	EOF
@@ -77,10 +79,13 @@ if [ -z "$SKIP_SSH_TESTS" ]; then
 	done <"${SSHD_DIR}/id_rsa.pub"
 
 	# Get the fingerprint for localhost and remove the colons so we can
-	# parse it as a hex number. The Mac version is newer so it has a
-	# different output format.
-	SSH_FINGERPRINT=$(ssh-keygen -E md5 -F '[localhost]:2222' -f "${HOME}/.ssh/known_hosts" -l | tail -n 1 | cut -d ' ' -f 3 | cut -d : -f2- | tr -d :)
-	# SSH_FINGERPRINT=$(ssh-keygen -F '[localhost]:2222' -f "${HOME}/.ssh/known_hosts" -l | tail -n 1 | cut -d ' ' -f 2 | tr -d ':')
+	# parse it as a hex number. Older versions have a different output
+	# format.
+	if [[ $(ssh -V 2>&1) == OpenSSH_6* ]]; then
+		SSH_FINGERPRINT=$(ssh-keygen -F '[localhost]:2222' -f "${HOME}/.ssh/known_hosts" -l | tail -n 1 | cut -d ' ' -f 2 | tr -d ':')
+	else
+		SSH_FINGERPRINT=$(ssh-keygen -E md5 -F '[localhost]:2222' -f "${HOME}/.ssh/known_hosts" -l | tail -n 1 | cut -d ' ' -f 3 | cut -d : -f2- | tr -d :)
+	fi
 fi
 
 # Run the tests that do not require network connectivity.
