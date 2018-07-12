@@ -96,7 +96,7 @@ echo "##########################################################################
 	echo "## Running (offline) tests"
 echo "##############################################################################"
 
-#	ctest -V -R offline || die $?
+	ctest -V -R offline || die $?
 fi
 
 if [ -z "$SKIP_ONLINE_TESTS" ]; then
