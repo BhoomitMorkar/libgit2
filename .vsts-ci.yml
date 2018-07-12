@@ -8,28 +8,28 @@ phases:
   steps:
   - task: Docker@0
     displayName: Build
-	inputs:
-	  containerregistrytype: 'Container Registry'
-	  action: 'Run an image'
+    inputs:
+      containerregistrytype: 'Container Registry'
+      action: 'Run an image'
       imageName: 'ethomson/libgit2-trusty:latest'
-	  volumes: |
-	   $(Build.SourcesDirectory):/src
-	   $(Build.BinariesDirectory):/build
-	  workDir: '/build'
-	  containerCommand: '/src/script/cibuild.sh'
-	  detached: false
+      volumes: |
+       $(Build.SourcesDirectory):/src
+       $(Build.BinariesDirectory):/build
+      workDir: '/build'
+      containerCommand: '/src/script/cibuild.sh'
+      detached: false
   - task: Docker@0
     displayName: Test
-	inputs:
-	  containerregistrytype: 'Container Registry'
-	  action: 'Run an image'
+    inputs:
+      containerregistrytype: 'Container Registry'
+      action: 'Run an image'
       imageName: 'ethomson/libgit2-trusty:latest'
-	  volumes: |
-	   $(Build.SourcesDirectory):/src
-	   $(Build.BinariesDirectory):/build
-	  workDir: '/build'
-	  containerCommand: '/src/script/citest.sh'
-	  detached: false
+      volumes: |
+       $(Build.SourcesDirectory):/src
+       $(Build.BinariesDirectory):/build
+      workDir: '/build'
+      containerCommand: '/src/script/citest.sh'
+      detached: false
 
 - phase: macOS
   queue:
