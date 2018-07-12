@@ -15,17 +15,17 @@ Write-Host "PATH:"
 Write-Host "${Env:PATH}"
 Write-Host ""
 
-Write-Host "#######################################################################"
+Write-Host "##############################################################################"
 Write-Host "## Configuring build environment"
-Write-Host "#######################################################################"
+Write-Host "##############################################################################"
 
 cmake $SourceDirectory -DBUILD_EXAMPLES=ON ${Env:CMAKE_OPTIONS}
 if ($LastExitCode -ne 0) { [Environment]::Exit($LastExitCode) }
 
 Write-Host ""
-Write-Host "#######################################################################"
+Write-Host "##############################################################################"
 Write-Host "## Building libgit2"
-Write-Host "#######################################################################"
+Write-Host "##############################################################################"
 
 cmake --build .
 if ($LastExitCode -ne 0) { [Environment]::Exit($LastExitCode) }

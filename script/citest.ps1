@@ -7,9 +7,9 @@ $PSDefaultParameterValues['*:ErrorAction'] = 'Stop'
 
 if ($Env:SKIP_TESTS) { exit }
 
-Write-Host "#######################################################################"
+Write-Host "##############################################################################"
 Write-Host "## Configuring test environment"
-Write-Host "#######################################################################"
+Write-Host "##############################################################################"
 
 Write-Host ""
 Write-Host "Starting HTTP proxy..."
@@ -17,17 +17,17 @@ Invoke-WebRequest -Method GET -Uri https://github.com/ethomson/poxyproxy/release
 javaw -jar poxyproxy.jar -d --port 8080 --credentials foo:bar
 
 Write-Host ""
-Write-Host "#######################################################################"
+Write-Host "##############################################################################"
 Write-Host "## Running (offline) tests"
-Write-Host "#######################################################################"
+Write-Host "##############################################################################"
 
 ctest -V -R offline
 if ($LastExitCode -ne 0) { [Environment]::Exit($LastExitCode) }
 
 Write-Host ""
-Write-Host "#######################################################################"
+Write-Host "##############################################################################"
 Write-Host "## Running (online) tests"
-Write-Host "#######################################################################"
+Write-Host "##############################################################################"
 
 ctest -V -R online
 if ($LastExitCode -ne 0) { [Environment]::Exit($LastExitCode) }
