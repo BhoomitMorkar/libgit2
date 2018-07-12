@@ -104,7 +104,7 @@ echo "##########################################################################
 	echo "## Running (online) tests"
 echo "##############################################################################"
 
-	ctest -V -R online
+	ctest -V -R online || die $?
 fi
 
 if [ -z "$SKIP_GITDAEMON_TESTS" ]; then
