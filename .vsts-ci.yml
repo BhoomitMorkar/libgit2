@@ -3,6 +3,7 @@ resources:
 
 phases:
 - phase: linux_ubuntu_trusty
+  displayName: 'Linux (Ubuntu Trusty)'
   queue:
     name: 'Hosted Linux Preview'
   steps:
@@ -31,7 +32,8 @@ phases:
       containerCommand: '/src/script/citest.sh'
       detached: false
 
-- phase: macOS
+- phase: macos
+  displayName: 'macOS'
   queue:
     name: 'Hosted macOS Preview'
   steps:
@@ -46,7 +48,8 @@ phases:
     env:
       TMPDIR: $(Agent.TempDirectory)
 
-- phase: WindowsVisualStudioamd64
+- phase: windows_vs_amd64
+  displayName: 'Windows (Visual Studio amd64)'
   queue:
     name: Hosted
   steps:
@@ -57,7 +60,8 @@ phases:
   - powershell: . '$(Build.SourcesDirectory)\script\citest.ps1' '$(Build.BinariesDirectory)'
     displayName: Test
 
-- phase: WindowsVisualStudiox86
+- phase: windows_vs_x86
+  displayName: 'Windows (Visual Studio x86)'
   queue:
     name: Hosted
   steps:
@@ -68,7 +72,8 @@ phases:
   - powershell: . '$(Build.SourcesDirectory)\script\citest.ps1' '$(Build.BinariesDirectory)'
     displayName: Test
 
-- phase: WindowsMinGWamd64
+- phase: windows_mingw_amd64
+  displayName: 'Windows (MinGW amd64)'
   queue:
     name: Hosted
   steps:
@@ -91,7 +96,8 @@ phases:
   - powershell: . '$(Build.SourcesDirectory)\script\citest.ps1' '$(Build.BinariesDirectory)'
     displayName: Test
 
-- phase: WindowsMinGWx86
+- phase: windows_mingw_x86
+  displayName: Windows (MinGW x86)
   queue:
     name: Hosted
   steps:
