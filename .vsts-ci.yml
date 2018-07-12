@@ -2,49 +2,49 @@ resources:
 - repo: self
 
 phases:
-- phase: LinuxUbuntuTrusty
-  queue:
-    name: 'Hosted Linux Preview'
-  steps:
-  - task: Docker@0
-    displayName: Build
-    inputs:
-      containerregistrytype: 'Container Registry'
-      action: 'Run an image'
-      imageName: 'ethomson/libgit2-trusty:latest'
-      volumes: |
-       $(Build.SourcesDirectory):/src
-       $(Build.BinariesDirectory):/build
-      workDir: '/build'
-      containerCommand: '/src/script/cibuild.sh'
-      detached: false
-  - task: Docker@0
-    displayName: Test
-    inputs:
-      containerregistrytype: 'Container Registry'
-      action: 'Run an image'
-      imageName: 'ethomson/libgit2-trusty:latest'
-      volumes: |
-       $(Build.SourcesDirectory):/src
-       $(Build.BinariesDirectory):/build
-      workDir: '/build'
-      containerCommand: '/src/script/citest.sh'
-      detached: false
-
-- phase: macOS
-  queue:
-    name: 'Hosted macOS Preview'
-  steps:
-  - bash: . '$(Build.SourcesDirectory)/script/install-deps-osx.sh' '$(Build.BinariesDirectory)'
-    displayName: Install Dependencies
-  - bash: . '$(Build.SourcesDirectory)/script/cibuild.sh' '$(Build.BinariesDirectory)'
-    displayName: Build
-    env:
-      PKG_CONFIG_PATH: /usr/local/opt/openssl/lib/pkgconfig
-  - bash: . '$(Build.SourcesDirectory)/script/citest.sh' '$(Build.BinariesDirectory)'
-    displayName: Test
-    env:
-      TMPDIR: $(Agent.TempDirectory)
+#- phase: LinuxUbuntuTrusty
+#  queue:
+#    name: 'Hosted Linux Preview'
+#  steps:
+#  - task: Docker@0
+#    displayName: Build
+#    inputs:
+#      containerregistrytype: 'Container Registry'
+#      action: 'Run an image'
+#      imageName: 'ethomson/libgit2-trusty:latest'
+#      volumes: |
+#       $(Build.SourcesDirectory):/src
+#       $(Build.BinariesDirectory):/build
+#      workDir: '/build'
+#      containerCommand: '/src/script/cibuild.sh'
+#      detached: false
+#  - task: Docker@0
+#    displayName: Test
+#    inputs:
+#      containerregistrytype: 'Container Registry'
+#      action: 'Run an image'
+#      imageName: 'ethomson/libgit2-trusty:latest'
+#      volumes: |
+#       $(Build.SourcesDirectory):/src
+#       $(Build.BinariesDirectory):/build
+#      workDir: '/build'
+#      containerCommand: '/src/script/citest.sh'
+#      detached: false
+#
+#- phase: macOS
+#  queue:
+#    name: 'Hosted macOS Preview'
+#  steps:
+#  - bash: . '$(Build.SourcesDirectory)/script/install-deps-osx.sh' '$(Build.BinariesDirectory)'
+#    displayName: Install Dependencies
+#  - bash: . '$(Build.SourcesDirectory)/script/cibuild.sh' '$(Build.BinariesDirectory)'
+#    displayName: Build
+#    env:
+#      PKG_CONFIG_PATH: /usr/local/opt/openssl/lib/pkgconfig
+#  - bash: . '$(Build.SourcesDirectory)/script/citest.sh' '$(Build.BinariesDirectory)'
+#    displayName: Test
+#    env:
+#      TMPDIR: $(Agent.TempDirectory)
 
 - phase: WindowsVisualStudioamd64
   queue:
