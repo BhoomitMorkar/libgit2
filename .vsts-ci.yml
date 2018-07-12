@@ -4,7 +4,7 @@ resources:
 phases:
 - phase: LinuxUbuntuTrusty
   queue:
-    name: Hosted Linux Preview
+    name: Hosted Linux
   steps:
   - task: Docker@0
     displayName: Build
@@ -33,7 +33,7 @@ phases:
 
 - phase: macOS
   queue:
-    name: Hosted macOS Preview
+    name: Hosted macOS
   steps:
   - bash: . '$(Build.SourcesDirectory)/script/install-deps-osx.sh' '$(Build.BinariesDirectory)'
     displayName: Install Dependencies
