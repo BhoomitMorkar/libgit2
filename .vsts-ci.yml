@@ -5,7 +5,6 @@ phases:
 - phase: Windows (Visual Studio amd64)
   queue:
     name: Hosted
-    condition: succeeded()
   steps:
   - powershell: . '$(Build.SourcesDirectory)\script\cibuild.ps1' '$(Build.BinariesDirectory)'
     displayName: Build
@@ -17,7 +16,6 @@ phases:
 - phase: Windows (Visual Studio x86)
   queue:
     name: Hosted
-    condition: succeeded()
   steps:
   - powershell: . '$(Build.SourcesDirectory)\script\cibuild.ps1' '$(Build.BinariesDirectory)'
     displayName: Build
@@ -29,7 +27,6 @@ phases:
 - phase: Windows (MinGW amd64)
   queue:
     name: Hosted
-    condition: succeeded()
   steps:
   - task: automagically.DownloadFile.DownloadFile.DownloadFile@1
     displayName: Download MinGW
@@ -53,7 +50,6 @@ phases:
 - phase: Windows_(MinGW x86)
   queue:
     name: Hosted
-    condition: succeeded()
   steps:
   - task: automagically.DownloadFile.DownloadFile.DownloadFile@1
     displayName: Download MinGW
