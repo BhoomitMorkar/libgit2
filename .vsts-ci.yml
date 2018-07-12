@@ -2,7 +2,7 @@ resources:
 - repo: self
 
 phases:
-- phase: Windows (Visual Studio amd64)
+- phase: Windows_(Visual Studio amd64)
   queue:
     name: Hosted
   steps:
@@ -13,7 +13,7 @@ phases:
   - powershell: . '$(Build.SourcesDirectory)\script\citest.ps1' '$(Build.BinariesDirectory)'
     displayName: Test
 
-- phase: Windows (Visual Studio x86)
+- phase: Windows_(Visual Studio x86)
   queue:
     name: Hosted
   steps:
@@ -24,7 +24,7 @@ phases:
   - powershell: . '$(Build.SourcesDirectory)\script\citest.ps1' '$(Build.BinariesDirectory)'
     displayName: Test
 
-- phase: Windows (MinGW amd64)
+- phase: Windows_(MinGW amd64)
   queue:
     name: Hosted
   steps:
