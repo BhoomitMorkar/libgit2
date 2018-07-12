@@ -1,0 +1,75 @@
+resources:
+- repo: self
+
+phases:
+- phase: Windows (Visual Studio amd64)
+  queue:
+    name: Hosted
+    condition: succeeded()
+  steps:
+  - displayName: Build
+    powershell: . '$(Build.SourcesDirectory)\script\cibuild.ps1' '$(Build.BinariesDirectory)'
+    env:
+      CMAKE_OPTIONS: -G"Visual Studio 12 2013 Win64"
+  - displayName: Test
+    powershell: . '$(Build.SourcesDirectory)\script\citest.ps1' '$(Build.BinariesDirectory)'
+
+- phase: Windows (Visual Studio x86)
+  queue:
+    name: Hosted
+    condition: succeeded()
+  steps:
+  - displayName: Build
+    powershell: . '$(Build.SourcesDirectory)\script\cibuild.ps1' '$(Build.BinariesDirectory)'
+    env:
+      CMAKE_OPTIONS: -G"Visual Studio 12 2013"
+  - displayName: Test
+    powershell: . '$(Build.SourcesDirectory)\script\citest.ps1' '$(Build.BinariesDirectory)'
+
+- phase: Windows (MinGW amd64)
+  queue:
+    name: Hosted
+    condition: succeeded()
+  steps:
+  - displayName: Download MinGW
+    task: automagically.DownloadFile.DownloadFile.DownloadFile@1
+    inputs:
+      FileUrl: 'https://bintray.com/libgit2/build-dependencies/download_file?file_path=mingw-w64-x86_64-8.1.0-release-win32-seh-rt_v6-rev0.zip'
+      DestinationFolder: '$(Agent.TempDirectory)'
+  - displayName: Extract MinGW
+    task: ExtractFiles@1
+    inputs:
+      archiveFilePatterns: '$(Agent.TempDirectory)\mingw-w64-x86_64-8.1.0-release-win32-seh-rt_v6-rev0.zip'
+      destinationFolder: '$(Agent.WorkFolder)'
+      cleanDestinationFolder: false
+  - displayName: Build
+    powershell: . '$(Build.SourcesDirectory)\script\cibuild.ps1'
+    env:
+      CMAKE_OPTIONS: -G"MinGW Makefiles"
+      PATH: $(Agent.WorkFolder)\mingw64\bin;C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\CMake\bin
+  - displayName: Test
+    powershell: . '$(Build.SourcesDirectory)\script\citest.ps1' '$(Build.BinariesDirectory)'
+
+- phase: Windows_(MinGW x86)
+  queue:
+    name: Hosted
+    condition: succeeded()
+  steps:
+  - displayName: Download MinGW
+    task: automagically.DownloadFile.DownloadFile.DownloadFile@1
+    inputs:
+      FileUrl: 'https://bintray.com/libgit2/build-dependencies/download_file?file_path=mingw-w64-i686-8.1.0-release-win32-sjlj-rt_v6-rev0.zip'
+      DestinationFolder: '$(Agent.TempDirectory)'
+  - displayName: Extract MinGW
+    task: ExtractFiles@1
+    inputs:
+      archiveFilePatterns: '$(Agent.TempDirectory)\mingw-w64-i686-8.1.0-release-win32-sjlj-rt_v6-rev0.zip'
+      destinationFolder: '$(Agent.WorkFolder)'
+      cleanDestinationFolder: false
+  - displayName: Build
+    powershell: . '$(Build.SourcesDirectory)\script\cibuild.ps1'
+    env:
+      CMAKE_OPTIONS: -G"MinGW Makefiles"
+      PATH: $(Agent.WorkFolder)\mingw32\bin;C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\CMake\bin
+  - displayName: Test
+    powershell: . '$(Build.SourcesDirectory)\script\citest.ps1' '$(Build.BinariesDirectory)'
