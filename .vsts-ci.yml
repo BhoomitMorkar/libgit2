@@ -2,7 +2,7 @@ resources:
 - repo: self
 
 phases:
-- phase: LinuxUbuntuTrusty
+- phase: linux_ubuntu_trusty
   queue:
     name: 'Hosted Linux Preview'
   steps:
